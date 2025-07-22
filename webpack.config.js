@@ -2,19 +2,31 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'development',
   target: 'node',
-  entry: './src/server.ts',
+  entry: {
+    server: './src/server.ts',
+    styles: './src/styles.css'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'server.js',
+    filename: '[name].js',
   },
   resolve: { extensions: ['.ts', '.js'] },
   externals: [nodeExternals()],
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader'
+        ]
+      },
       {
         test: /\.ts$/,
         use: 'ts-loader',
@@ -23,6 +35,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: path.join('public', 'css', 'style.css'),
+    }),
     new ESLintPlugin({
       extensions: ['ts'],
       fix: true,
