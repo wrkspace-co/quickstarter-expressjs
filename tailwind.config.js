@@ -3,6 +3,6 @@ module.exports = {
     './src/views/**/*.html',
     './src/**/*.{ts,js}',
   ],
-  theme: { extend: {} },
+  theme: {},
   plugins: [],
 };
